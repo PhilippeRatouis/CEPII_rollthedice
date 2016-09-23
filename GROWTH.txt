@@ -1,0 +1,389 @@
+#####PARAMETERS
+#####Firms
+beta = 0.5
+sigma_T = 0.2                  
+gr_pr = 0.03 
+gamma = 0.15 
+gr0 = 0.00122 
+gamma_u = 0.05 
+gamma_r = 0.1 
+delta = 0.10667 
+omega0 = -0.20594 
+omega1 = 1 
+omega2 = 0.02  
+omega3 = 0.45621 
+eta = 0.6 
+rl_N = 0.07 
+sigma_N = 0.16667               
+iota = 0.8 
+psiU = 0.92 
+psiD = 0.15255 
+npl = 0.02
+#####Households
+theta = 0.22844
+alpha1 = 0.75
+alpha2 = 0.064
+epsilon = 0.5
+eta0 = 0.07416
+eta1 = 0.4
+lambda_c = 0.05
+#####Portfolio Choice
+lambda11 = 0.12209
+lambda12 = 6.6
+lambda13 = -2.2
+lambda14 = -2.2
+lambda15 = -2.2
+lambda16 = 0.3
+lambda21 = 0.25000
+lambda22 = -2.2
+lambda23 = 6.6
+lambda24 = -2.2
+lambda25 = -2.2
+lambda26 = -0.1
+lambda31 = -0.04341
+lambda32 = -2.2
+lambda33 = -2.2
+lambda34 = 6.6
+lambda35 = -2.2
+lambda36 = -0.1
+lambda41 = 0.67132
+lambda42 = -2.2
+lambda43 = -2.2
+lambda44 = -2.2
+lambda45 = 6.6
+lambda46 = -0.1
+#####Government
+gr_g = 0.03
+#####Commercial Banks
+rho = 0.05
+dzeta_m = 0.0007
+BLR_T = 0.085
+beta_b = 0.4
+epsilon_b = 0.25
+lambda_b = 0.0153
+NCAR = 0.1
+sigma0 = 0.3612 
+sigma1 = 3 
+delta_rep = 0.1
+#####EXOGENOUS
+Nfe = 100
+rb_bar = 0.035 
+addbl = 0.1
+#####INITIAL VALUES
+rb = 0.035
+Bbd = 4388930
+Bbs = 4388930
+Bcbd = 4655690
+Bhd = 33396900
+Bhs = 33396900
+Bs = 42484800
+BLd = 840742
+BLs = 840742
+GD = 57728700
+ed = 5112.6001
+es = 5112.6001
+Hbd = 2025540
+Hhd = 2630150
+INV = 11585400
+inv = 2064890
+inv_e = 2405660
+inv_T = 2064890
+K = 127444000
+k = 17768900
+# l_fd = 15457910
+Lfd = 40510800
+Lfs = 40510800
+Lhd = 21606600
+Lhs = 21606600
+Md = 40510800
+Ms = 40510800
+Mh = 40510800
+OFb = 3473280
+OFb_e = 3782430
+OFb_T= 3638100
+V = 165395000
+Vfma = 159291000
+v = 22576100
+phi = 0.26417
+phi_T = 0.26417
+add_l = 0.04592
+BLR = 0.1091
+BUR = 0.06324
+c = 7334240
+CAR = 0.09245
+C = 52603100
+ER = 0.87
+Fb = 1744130
+Fb_T = 1744140
+Ff = 18081100
+Ff_T = 18013600
+FDb = 1325090
+FDf = 2670970
+FUb = 419039
+FUf = 15153800
+FUf_T = 15066200
+G = 16755600
+g = 2336160
+GL = 2775900
+gr_k = 0.03001
+I = 16911600
+i = 2357910
+N = 87.18078
+N_T = 87.18078
+NHUC = 5.6735
+NL = 683593
+nl = 95311
+NPL = 309158
+npl_e = 0.02
+NUC = 5.6106
+omega_T = 112852
+p = 7.1723
+pbl = 18.182
+pe = 17937
+PE = 5.07185
+pi = 0.0026
+pr = 138659
+PSBR = 1894780
+q = 0.77443
+rbl = 0.055
+r_k = 0.03008
+rl = 0.06522
+rm = 0.0193
+REP = 2092310
+rrl = 0.06246
+S = 86270300
+s = 12028300
+s_e = 12028300
+tax = 17024100
+u = 0.70073
+UC = 5.6106
+W = 777968
+WB = 67824000
+Y = 86607700
+y = 12088400
+YDr = 56446400
+ydr = 7813270
+ydr_e = 7813290
+YP = 73158700
+#####EQUATIONS
+rb = rb_bar
+rbl = rb + addbl
+pbl = 1/rbl
+# Commercial banks (structure of interest rates)
+#(11.94) Deposit interest rate
+rm  = rm(-1) + dzeta_m*((BLR(-1)-BLR_T)/abs(BLR(-1)-BLR_T))                           
+#(11.40) Defaulted (non-performing) loans
+NPL    = npl*Lfd(-1)                                
+#(11.103) Dividends of banks
+FDb    = lambda_b*Y(-1)                             
+#(11.99) Long-run own funds target
+OFb_T  = NCAR*(Lfs(-1) + Lhs(-1))                   
+#(11.100) Short-run own funds target
+OFb_e  = OFb(-1) + beta_b*(OFb_T - OFb(-1))         
+#(11.102) Expected proportion of non-performing loans
+npl_e = epsilon_b*npl_e(-1) + (1 - epsilon_b)*npl    
+#(11.101) Target retained earnings of banks
+FUb_T  = OFb_e - OFb(-1) + npl_e*Lfs(-1)            
+#(11.104) Target profits of banks
+Fb_T   = FDb + FUb_T                                
+#(11.106) Lending mark-up over deposit rate
+addl = (Fb_T - rb(-1)*Bbd(-1) + rm(-1)*(Ms(-1) - (1 - npl_e)*Lfs(-1) - Lhs(-1)))/((1 - npl_e)*Lfs(-1) +Lhs(-1)) 
+#(11.98) Loan interest rate
+rl   = rm + addl         
+#(11.105) Actual profits of banks
+Fb   = rl(-1)*(Lfs(-1) + Lhs(-1) - NPL) + rb(-1)*Bbd(-1) - rm(-1)*Ms(-1)      
+#(11.107) Actual retained earnings
+FUb  = Fb - FDb                                                               
+#(11.108) Own funds of banks
+OFb  = OFb(-1) + FUb - NPL                                                    
+# Firms - Production
+#(11.22) Labor productivity
+pr = pr(-1)*(1 + gr_pr)         
+#(11.2) Expected real sales
+s_e     = beta*s(-1) + (1 - beta)*s(-1)*(1 + gr_pr)     
+#(11.33) Opening inventories to expected sales ratio
+sigma_e = inv(-1)/s_e                                    
+#(11.3) Long-run inventory target
+inv_T   = sigma_T*s_e                                    
+#(11.4) Short-run inventory target
+inv_e   = inv(-1) + gamma*(inv_T - inv(-1))              
+#(11.1) Real output decision
+y   = s_e + (inv_e - inv(-1))     
+#(11.23)  Desired Employment
+N_T = y/pr                        
+#(11.24) Actual employment
+N   = N(-1) + eta*(N_T - N(-1))   
+#(11.19) Employment rate
+ER = N(-1)/Nfe     
+#(11.18) Real wage aspiration assessed at bargaining table
+omega_T = omega0 + omega1*pr + omega2*ER     
+#(11.21) Nominal wage
+W       = W(-1) + omega3*(omega_T*p(-1) - W(-1))                                    
+#(11.25) Nominal wage bill
+WB      = N*W                                                                       
+#(11.26) Actual unit cost
+UC      = WB/y                                                      
+#(11.27) Normal (trend) unit cost
+NUC     = W/pr                                                      
+#(11.28) Normal historic unit cost (modif)
+NHUC    = (1 - sigma_N)*NUC + sigma_N*(1 + rl_N)*NUC(-1)            
+#(11.32) Expected historical costs 
+HC_e    = (1 - sigma_e)*s_e*UC + sigma_e*(1 + rl(-1))*s_e*UC(-1)    
+#(11.35) Planned retained earnings of firms
+FUf_T = psiU*I(-1)                                  
+#(11.36)  Dividends of firms
+FDf   = psiD*Ff(-1)                                 
+#(11.42) Dividend yield of firms
+r_k    = FDf/(es(-1)*pe(-1))                        
+#(11.34) Planned entrepreneurial profits of firms
+Ff_T  = FUf_T + FDf + rl(-1)*(Lfd(-1) - INV(-1))    
+#(11.31) Ideal mark-up
+phi_T = Ff_T/HC_e                             
+#(11.30) Actual Mark-up
+phi   = phi(-1) + iota*(phi_T(-1) - phi(-1))  
+#(11.29) Normal-cost pricing
+p    = (1 + phi)*NHUC            
+#(11.10) Rate of price inflation
+pi   = (p - p(-1))/p(-1)         
+#(11.9) Real rate interest on loans
+rrl  = (1+rl) / (1 + pi) - 1     
+#(11.8) Capacity utilization proxy
+u    = y/k(-1)                         
+#(11.7) Growth of real capital stock
+gr_k = gr0 + gamma_u*u + gamma_r*rrl   
+#(11.6) Real capital stock
+k    = k(-1)*(1 + gr_k)                
+#(11.16) Nominal value if fixed capital
+K    = k*p                             
+#(11.11) Real gross investment
+i = (gr_k + delta)*k(-1) 
+#(11.15) Nominal gross investment
+I = i*p                  
+# Households
+#(11.54) Expected real regular disposable income
+ydr_e = epsilon*ydr(-1)*(1 + gr_pr) + (1-epsilon)*ydr_e(-1)       
+#(11.45) Nominal personal income
+YP    = WB + FDf + FDb + rm(-1)*Mh(-1) +rb(-1)*Bhd(-1) + BLd(-1)  
+#(11.46) Income taxes
+tax   = theta*YP                                                  
+#(11.47) Nominal regular disposable income
+YDr   = YP - tax - rl(-1)*Lhd(-1)                                 
+#(11.55) Real regular disposable income)
+ydr   = YDr/p - (pi*V(-1))/p                                      
+#(11.57) New loans to personal income ratio
+n = eta0 + eta1*rrl                    
+#(11.56) Gross amount of new personal loans
+GL  = n*YP                             
+#(11.59) Personal loan repayments
+REP = delta_rep*Lhd(-1)                
+#(11.58) Net amount of new personal loans
+NL  = GL - REP                         
+#(11.61) Real amount of new personal loans
+nl  = NL/p        
+#(11.60) Demand for personal loans
+Lhd = Lhd(-1) + NL                     
+#(11.89) Personal loans supplie don demand
+Lhs = Lhd                              
+#(11.62) Burden of personal debt
+BUR = (REP + rl(-1)*Lhd(-1))/YP        
+#(11.53) Real consumption
+c = alpha1*(ydr_e + nl) + alpha2*v(-1)  
+#(11.52) Nominal consumption
+C = c*p                                 
+# Government Expenditures
+#(11.72) Real pure government expenditures
+g    = g(-1)*(1 + gr_g)                                      
+#(11.71) Nominal pure government expenditures
+G    = g*p                                                   
+#(11.73) Nominal government deficit
+PSBR = G + rb(-1)*(Bhs(-1) + Bbs(-1)) + BLs(-1) - tax        
+# Market for goods and services
+#(11.12) Actual real sales
+s   = i + c + g          
+#(11.13) Nominal value of realized sales
+S   = s*p                
+#(11.5) Actual real inventory
+inv  = inv(-1) + (y - s) 
+#(11.14) Inventories valued at current cost
+INV  = inv*UC            
+#(11.17) Nominal GDP
+Y   = S + (inv - inv(-1))*UC         
+# Household Portfolio Choices -- Desired Stocks
+# Deposits (demand)
+Md   = (lambda11 + lambda12*rm + lambda13*rb + lambda14*rbl + lambda15*r_k + lambda16*YP/Vfma(-1))*Vfma(-1)                                 
+# Bills
+Bhd  = (lambda21 + lambda22*rm + lambda23*rb + lambda24*rbl + lambda25*r_k + lambda26*YP/Vfma(-1))*Vfma(-1)                            
+# Bonds
+BLd  = (lambda31 + lambda32*rm + lambda33*rb + lambda34*rbl + lambda35*r_k + lambda36*YP/Vfma(-1))*Vfma(-1)                         
+# Equity (value)
+E    = (lambda41 + lambda42*rm + lambda43*rb + lambda44*rbl + lambda45*r_k + lambda46*YP/Vfma(-1))*Vfma(-1)                             
+# Price of equity
+pe   = (E-(1 - psiU)*I(-1))/es(-1)                
+# Equity (real)
+es   = E/pe                                        
+# Market equilibrium
+ed   = es 
+#(11.49) Capital gains
+CG   = (pbl - pbl(-1))*BLd(-1) + (pe - pe(-1))*ed(-1) + (OFb - OFb(-1))     
+#(11.48) Haig-Simons nominal disposable income
+YDhs = YDr +CG                              
+#(11.50) Nominal wealth
+V    = V(-1) + YDhs - C                     
+#(11.51) Real stock of wealth
+v    = V/p                                 
+#(11.69) Household's demand for cash
+Hhd  = lambda_c*C                    
+#(11.68) Financial market asset investible wealth
+Vfma = V + Lhd - Hhd - OFb           
+#(11.67) Money deposits - a residual
+Mh   = Vfma - Bhd -pbl*BLd -pe*ed    
+# Bank deposits supplied on demand
+Ms   = Mh
+#(11.37) Realized entrepreneurial profits of firms
+Ff  = S - WB + (INV - INV(-1)) - rl*INV(-1)                           
+#(11.38) Retained earnings of firms
+FUf = Ff - FDf - rl(-1)*(Lfd(-1) - INV(-1)) + rl(-1)*NPL 
+#(11.39) Demand for loans by firms
+Lfd = Lfd(-1) + I + (INV - INV(-1)) - FUf - (es - es(-1))*pe - NPL             
+#(11.88) Loans to firms supplied on demand
+Lfs = Lfd                                                
+#(11.109) Actual Capital adequacy ratio
+CAR = OFb/(Lfs + Lhs)
+ #(11.76) Central bank profits
+Fcb  = rb(-1)*Bcbd(-1)                
+#(11.77) Bonds are supplied on demand
+BLs  = BLd                             
+ #(11.78)  Household bills are supplied on demand
+Bhs  = Bhd                            
+#(11.79) Cash supplied on demand
+Hhs  = Hhd                            
+#(11.90) Reserve requirements of banks
+Hbd  = rho*Ms                          
+#(11.80) Reserves supplied on demand
+Hbs  = Hbd                             
+#(11.81) Supply of high-powered money
+Hs   = Hhs + Hbs                       
+#(11.82) Central bank bills
+Bcbd = Hs                              
+#(11.83) Central bank buys bills it demands
+Bcbs = Bcbd                            
+#(11.74) New issues of bills
+Bs   = Bs(-1) + PSBR - (BLs - BLs(-1))*pbl        
+#(11.75) Nominal government debt
+GD   = Bhs + BLs + Hs                 
+#(11.91) Bills supplied to banks
+Bbs = Bs - Bhs - Bcbs                    
+#(11.92) Balance sheet constraint of banks
+Bbd = Ms - Lfs - Lhs  - Hbd  + OFb       
+#(11.93) Bank liquidity ratio
+BLR = Bbd/Ms
+#Proportion of deposits
+P1 = Mh/Vfma(-1)
+#Proportion of bills
+P2 = Bhd/Vfma(-1)
+#Proportion of bonds
+P3 = pbl*BLd/Vfma(-1)
+#Proportion of equity
+P4 = pe*ed/Vfma(-1)
+#####TIMELINE
+timeline 2010 2050
